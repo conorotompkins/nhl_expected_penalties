@@ -38,4 +38,14 @@ My theory is that the variables used to calculate xG are the same ones that help
   * Games played in career
   
   
-### Player-Season
+### Shift
+
+For any given shift, what variables lead to a team drawing a penalty at 5v5?
+
+* Game state (all stats from perspective of home team)
+ * Score differential
+ * Time remaining in period
+ * Time remaining in game
+ * Penalty differential
+ * Zone the shift started in
+* Some measure of the quality of the players on the ice
