@@ -34,6 +34,7 @@ My theory is that the variables used to calculate xG are the same ones that help
   * Age
   * Height
   * Weight
+  * Handedness
   * Draft number
   * Games played in career
   
