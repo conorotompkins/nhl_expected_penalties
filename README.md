@@ -8,6 +8,8 @@ A repo for analyzing why penalties are drawn in the NHL at 5v5.
 
 At the player-season level, what player characteristics are associated with drawing more penalties at 5v5?
 
+My theory is that the variables used to calculate xG are the same ones that help players draw penalties. If that is true, NHL players think there is value in xG.
+
 * Box score stats (all 5v5)
   * Goals
   * Primary assists
@@ -34,3 +36,6 @@ At the player-season level, what player characteristics are associated with draw
   * Weight
   * Draft number
   * Games played in career
+  
+  
+### Player-Season
