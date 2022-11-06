@@ -95,6 +95,35 @@ player_pen_taken |>
   ggplot(aes(penalties_taken)) +
   geom_density(fill = "grey")
 
+hit_df <- pbp |>
+  filter(event_type == "HIT",
+         strength_state == "5v5") |> 
+  select(strength_state, event_type, secondary_type,
+         event_player_1_type, event_player_1_name, event_player_1_id,
+         event_player_2_type, event_player_2_name, event_player_2_id)
+
+hit_df
+
+player_hit_draw <- hit_df |> 
+  drop_na(event_player_2_name) %>% 
+  count(event_player_2_name, event_player_2_id, sort = T, name = "hits_drawn") %>% 
+  rename(player = event_player_2_name,
+         player_id = event_player_2_id)
+
+player_hit_draw |> 
+  ggplot(aes(hits_drawn)) +
+  geom_density(fill = "grey")
+
+player_hit_given <- hit_df |> 
+  drop_na(event_player_1_name) %>% 
+  count(event_player_1_name, event_player_1_id, sort = T, name = "hits_given") %>% 
+  rename(player = event_player_1_name,
+         player_id = event_player_1_id)
+
+player_hit_given |> 
+  ggplot(aes(hits_given)) +
+  geom_density(fill = "grey")
+
 pbp |>
   filter(event_type %in% c("SHOT","MISSED_SHOT","GOAL")) 
 
@@ -127,9 +156,12 @@ player_metrics |>
 reg_data <- player_pen_draw |> 
   left_join(player_pen_taken, by = c("player", "player_id")) |> 
   left_join(player_metrics, by = c("player", "player_id")) |> 
+  left_join(player_hit_draw, by = c("player", "player_id")) |> 
+  left_join(player_hit_given, by = c("player", "player_id")) |> 
   #left_join(season_rosters, by = c("player")) |> 
   #mutate(position = coalesce(position, "unknown")) |> 
-  filter(shots >= 100)
+  filter(shots >= 100) |> 
+  select(player, player_id, season, team, everything())
 
 glimpse(reg_data)
 
@@ -140,7 +172,7 @@ reg_data |>
 #   filter(str_detect(player,  "Gabriel"))
 
 reg_data |> 
-  pivot_longer(cols = c(shots, goals, xg_median, shot_distance_median, penalties_taken)) |> 
+  pivot_longer(cols = -c(player:penalties_drawn)) |> 
   ggplot(aes(penalties_drawn, value, color = name)) +
   geom_jitter(alpha = .3) +
   geom_smooth() +
@@ -157,7 +189,7 @@ glance(lm_model)
 
 lm_fitted <- reg_data |> 
   bind_cols(predict(lm_model, reg_data)) |> 
-  rename(penalties_drawn_fitted = `...12`) |> 
+  rename(penalties_drawn_fitted = `...13`) |> 
   mutate(.resid = penalties_drawn - penalties_drawn_fitted)
 
 glimpse(lm_fitted)
