@@ -48,5 +48,6 @@ For any given shift, what variables lead to a team drawing a penalty at 5v5?
  * Time remaining in period
  * Time remaining in game
  * Penalty differential
- * Zone the shift started in
+* Zone the shift started in
 * Some measure of the quality of the players on the ice
+* Did the previous play end in an icing?
